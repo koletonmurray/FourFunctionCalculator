@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  CalculatorView.swift
 //  FourFunctionCalculator
 //
 //  Created by Koleton Murray on 9/21/24.
@@ -21,28 +21,59 @@ let columnCount = 4
 let gridItems = Array<GridItem>(repeating: .init(.flexible()), count: columnCount)
 
 struct CalculatorView: View {
+    
     struct Constants {
         static let buttonSpacing = 16.0
         static let displayFontSize = 90.0
     }
     
+    var calculatorViewModel: CalculatorViewModel
+        
     var body: some View {
         GeometryReader { geometry in
-            ZStack (alignment: .bottom) {
+            ZStack {
                 Rectangle ()
                     .fill(.black)
                     .ignoresSafeArea()
+                
                 VStack (alignment: .trailing, spacing: Layout.buttonSpacing) {
+                    HStack {
+                        Spacer()
+                        
+                        Image(systemName: "speaker.wave.2")
+                            .foregroundColor(.utilityBackground)
+                            .font(.system(size: 24, weight: .medium))
+
+                        Toggle(isOn: Binding(
+                            get: { calculatorViewModel.isMuted },
+                            set: { _ in calculatorViewModel.toggleMute() }
+                        )) {}
+                            .labelsHidden()
+                            .tint(.red)
+                        
+                        Image(systemName: "speaker.slash")
+                            .foregroundColor(.utilityBackground)
+                            .font(.system(size: 24, weight: .medium))
+                        
+                    }
+                    
+                    Spacer()
+                    
                     Text("1,000")
                         .font(.system(size: Constants.displayFontSize, weight: .thin))
                         .foregroundStyle(.white)
                         .padding(.trailing, Layout.buttonSpacing)
+                    
                     LazyVGrid(columns: gridItems, alignment: .leading, spacing: Layout.buttonSpacing) {
                         ForEach(buttonSpecs, id: \.label) { buttonSpec in
                             if buttonSpec.label.isEmpty {
                                 Text("")
                             } else {
-                                CalculatorButton(buttonSpec: buttonSpec, size: geometry.size)
+                                CalculatorButton(
+                                    buttonSpec: buttonSpec,
+                                    size: geometry.size,
+                                    calculatorViewModel: calculatorViewModel
+                                )
                             }
                         }
                     }
@@ -54,5 +85,5 @@ struct CalculatorView: View {
 }
 
 #Preview {
-    CalculatorView()
+    CalculatorView(calculatorViewModel: CalculatorViewModel())
 }
