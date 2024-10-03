@@ -22,7 +22,7 @@ struct CalculatorButton: View {
     
     var body: some View {
         Button {
-            calculatorViewModel.clickButton()
+            calculatorViewModel.handleButtonTap(for: buttonSpec)
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: cornerRadius(for: size))
@@ -31,12 +31,13 @@ struct CalculatorButton: View {
                         width: buttonSize(for: size, spanWidth: buttonSpec.type.spanWidth),
                         height: buttonSize(for: size, spanWidth: 1)
                     )
-                Text(buttonSpec.label)
+                Text(buttonSpec.symbol.rawValue)
                     .font(displayFont(for: size))
                     .foregroundStyle(buttonSpec.type.foregroundColor)
             }
         }
     }
+    
     func buttonSize(for size: CGSize, spanWidth: Int) -> CGFloat {
         if spanWidth > 1 {
             return minimum(size) / Constants.columnCount * Constants.scaleFactor * CGFloat(spanWidth) + Layout.buttonSpacing

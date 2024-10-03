@@ -1,18 +1,13 @@
 //
-//  CalculatorButtonType.swift
+//  CalculatorButtonType+Color.swift
 //  FourFunctionCalculator
 //
-//  Created by Koleton Murray on 9/24/24.
+//  Created by Koleton Murray on 10/1/24.
 //
 
 import SwiftUI
 
-enum CalculatorButtonType {
-    case utility
-    case compute
-    case number
-    case doublewide
-    
+extension CalculatorButtonType {
     var backgroundColor: Color {
         switch self {
             case .utility:

@@ -7,27 +7,16 @@
 
 import SwiftUI
 
-typealias ButtonSpec = (label: String, type: CalculatorButtonType)
-
-let buttonSpecs: [ButtonSpec] = [
-    ("AC", .utility),   ("+/-", .utility),  ("%", .utility),    ("÷", .compute),
-    ("7", .number),     ("8", .number),     ("9", .number),     ("×", .compute),
-    ("4", .number),     ("5", .number),     ("6", .number),     ("-", .compute),
-    ("1", .number),     ("2", .number),     ("3", .number),     ("+", .compute),
-    ("0", .doublewide), ("", .number),    (".", .utility),    ("=", .compute)
-]
-
 let columnCount = 4
 let gridItems = Array<GridItem>(repeating: .init(.flexible()), count: columnCount)
 
 struct CalculatorView: View {
     
     struct Constants {
-        static let buttonSpacing = 16.0
         static let displayFontSize = 90.0
     }
     
-    var calculatorViewModel: CalculatorViewModel
+    @Bindable var calculatorViewModel: CalculatorViewModel
         
     var body: some View {
         GeometryReader { geometry in
@@ -44,10 +33,7 @@ struct CalculatorView: View {
                             .foregroundColor(.utilityBackground)
                             .font(.system(size: 24, weight: .medium))
 
-                        Toggle(isOn: Binding(
-                            get: { calculatorViewModel.isMuted },
-                            set: { _ in calculatorViewModel.toggleMute() }
-                        )) {}
+                        Toggle(isOn: $calculatorViewModel.preferences.soundIsEnabled) {}
                             .labelsHidden()
                             .tint(.red)
                         
@@ -65,8 +51,8 @@ struct CalculatorView: View {
                         .padding(.trailing, Layout.buttonSpacing)
                     
                     LazyVGrid(columns: gridItems, alignment: .leading, spacing: Layout.buttonSpacing) {
-                        ForEach(buttonSpecs, id: \.label) { buttonSpec in
-                            if buttonSpec.label.isEmpty {
+                        ForEach(buttonSpecs, id: \.symbol.rawValue) { buttonSpec in
+                            if buttonSpec.symbol == .placeholder {
                                 Text("")
                             } else {
                                 CalculatorButton(

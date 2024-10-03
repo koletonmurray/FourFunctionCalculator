@@ -10,43 +10,25 @@ import Foundation
 @Observable class CalculatorViewModel {
     // MARK: - Properties
     
+    var preferences = Preferences()
+    
+    private var calculatorModel = CalculatorBrain()
     private var soundPlayer = SoundPlayer()
-    
-    var isMuted = false
-    
+
     // MARK: - Model Access
-    
-    func getCurrentValue() {}
-    
-    func getDisplayValue() {}
     
     
     
     // MARK: - User Intents
     
-    func clickButton() {
-        if !isMuted {
+    func handleButtonTap(for buttonsSpec: ButtonSpec) {
+        if !preferences.soundIsEnabled {
             soundPlayer.playSound(named: "Tap.mp3")
         }
     }
     
-    func toggleMute() {
-        isMuted.toggle()
-    }
-    
-    func calculate() {}
-    
-    func toggleNegative() {}
-    
-    func setNumber() {}
-    
-    func setOperator() {}
-    
-    func clear() {}
-    
-    func percent() {}
-    
-    func updateDisplayValue() {}
-    
     // MARK: - Helpers
+    
+    
+    
 }
