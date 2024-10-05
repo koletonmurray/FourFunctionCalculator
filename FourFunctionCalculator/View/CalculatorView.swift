@@ -16,60 +16,74 @@ struct CalculatorView: View {
         static let displayFontSize = 90.0
     }
     
-    @Bindable var calculatorViewModel: CalculatorViewModel
+    @Bindable var calculator: CalculatorEngine
         
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Rectangle ()
-                    .fill(.black)
-                    .ignoresSafeArea()
-                
-                VStack (alignment: .trailing, spacing: Layout.buttonSpacing) {
-                    HStack {
-                        Spacer()
-                        
-                        Image(systemName: "speaker.wave.2")
-                            .foregroundColor(.utilityBackground)
-                            .font(.system(size: 24, weight: .medium))
-
-                        Toggle(isOn: $calculatorViewModel.preferences.soundIsEnabled) {}
-                            .labelsHidden()
-                            .tint(.red)
-                        
-                        Image(systemName: "speaker.slash")
-                            .foregroundColor(.utilityBackground)
-                            .font(.system(size: 24, weight: .medium))
-                        
-                    }
-                    
+                VStack (alignment: .trailing, spacing: DrawingConstants.buttonSpacing) {
+                    accumulatorBody
+                    buttonGrid(for: geometry)
+                }
+                .padding(.leading, DrawingConstants.buttonSpacing)
+            }
+            .background(.black)
+        }
+    }
+    
+    var accumulatorBody: some View {
+        GeometryReader { geometry in
+            VStack (alignment: .trailing) {
+                HStack {
                     Spacer()
                     
-                    Text("1,000")
-                        .font(.system(size: Constants.displayFontSize, weight: .thin))
-                        .foregroundStyle(.white)
-                        .padding(.trailing, Layout.buttonSpacing)
+                    Image(systemName: "speaker.wave.2")
+                        .foregroundColor(.utilityBackground)
+                        .font(.system(size: 24, weight: .medium))
+
+                    Toggle(isOn: $calculator.preferences.soundIsEnabled) {}
+                        .labelsHidden()
+                        .tint(.red)
                     
-                    LazyVGrid(columns: gridItems, alignment: .leading, spacing: Layout.buttonSpacing) {
-                        ForEach(buttonSpecs, id: \.symbol.rawValue) { buttonSpec in
-                            if buttonSpec.symbol == .placeholder {
-                                Text("")
-                            } else {
-                                CalculatorButton(
-                                    buttonSpec: buttonSpec,
-                                    size: geometry.size,
-                                    calculatorViewModel: calculatorViewModel
-                                )
-                            }
-                        }
-                    }
+                    Image(systemName: "speaker.slash")
+                        .foregroundColor(.utilityBackground)
+                        .font(.system(size: 24, weight: .medium))
+                    
                 }
-                .padding()
+                
+                Spacer()
+                
+                Text(calculator.displayText)
+                    .font(
+                        systemFont(
+                            for: calculator.displayText,
+                            thatFits: geometry.size.width - DrawingConstants.buttonSpacing * 2,
+                            desiredSize: Constants.displayFontSize
+                        )
+                    )
+                    .foregroundStyle(.white)
+                    .padding(.trailing, DrawingConstants.buttonSpacing)
+            }
+        }
+    }
+    
+    func buttonGrid(for geometry: GeometryProxy) -> some View {
+        LazyVGrid(columns: gridItems, alignment: .leading, spacing: DrawingConstants.buttonSpacing) {
+            ForEach(buttonSpecs, id: \.symbol.rawValue) { buttonSpec in
+                if buttonSpec.symbol == .placeholder {
+                    Text("")
+                } else {
+                    CalculatorButton(
+                        buttonSpec: buttonSpec,
+                        size: geometry.size,
+                        calculator: calculator
+                    )
+                }
             }
         }
     }
 }
 
 #Preview {
-    CalculatorView(calculatorViewModel: CalculatorViewModel())
+    CalculatorView(calculator: CalculatorEngine())
 }

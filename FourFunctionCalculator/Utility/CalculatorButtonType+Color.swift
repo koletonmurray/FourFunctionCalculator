@@ -14,7 +14,7 @@ extension CalculatorButtonType {
                 .utilityBackground
             case .compute:
                 .computeBackground
-            case .number, .doublewide:
+            case .number, .doubleWide:
                 .numberBackground
         }
     }
@@ -23,6 +23,6 @@ extension CalculatorButtonType {
     }
     
     var spanWidth: Int {
-        self == .doublewide ? 2 : 1
+        self == .doubleWide ? 2 : 1
     }
 }

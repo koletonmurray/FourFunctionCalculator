@@ -11,7 +11,7 @@ import SwiftUI
 struct FourFunctionCalculatorApp: App {
     var body: some Scene {
         WindowGroup {
-            CalculatorView(calculatorViewModel: CalculatorViewModel())
+            CalculatorView(calculator: CalculatorEngine())
         }
     }
 }
